@@ -1,11 +1,38 @@
 <?php
+<?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Categoria;
+use App\Models\Estudiante as ModelsEstudiante;
+use Illuminate\Http\Request;
 
-class Estudiante extends Model
+class EstudianteControlador extends Controller
 {
-    use HasFactory;
+    public function index()
+    {
+        $estudiantes = ModelsEstudiante::all();
+        return view('tabla', compact('estudiantes'));
+    }
+    public function register()
+    {
+        $categorias = Categoria::all();
+        return view('formulario', compact('categorias'));
+    }
+
+    public function create(Request $request)
+    {
+        $data = $request->validate([
+            'nombre' => 'required|max:45',
+            'apellido' => 'required|max:45',
+            'año' => 'required|max:45',
+            'carnet' => 'required|max:45',
+            'edad' => 'required|max:45',
+            'category_id' => 'required',
+        ]);;
+
+        ModelsEstudiante::insert($data);
+
+        return redirect(route('tabla'));
+    }
 }
